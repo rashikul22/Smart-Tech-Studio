@@ -99,9 +99,10 @@ window.open("https://wa.me/8801875895538?text="+data,"_blank");
 </div>
 
 <header>
-<h2>Smart Tech Studio তে আপনাকে স্বাগতম</h2>
+<h4>Smart Tech Studio</h4>
 <p>আমাদের সেবা পেতে মেনু বাটন থেকে অপশন সিলেক্ট করুন। ধন্যবাদ</p>
-<p>যে কোন সমস্যায় হোয়াটসঅ্যাপ অথবা মেইল করুন: 01875895538 | rashikulislam000@gmail.com</p>
+<p>যে কোন সমস্যায় হোয়াটসঅ্যাপে ম্যাসেজ করুন: 01875895538 |
+  অথবা মেইল করুন: rashikulislam000@gmail.com</p>
 </header>
 
 <div class="menu-btn" onclick="toggleMenu()">☰ মেনু</div>
@@ -116,10 +117,11 @@ window.open("https://wa.me/8801875895538?text="+data,"_blank");
 <form id="nidForm">
 <input type="text" name="নাম" placeholder="নাম">
 <input type="text" name="NID নাম্বার" placeholder="NID নাম্বার">
-<input type="text" name="মোবাইল" placeholder="মোবাইল">
+<input type="text" name="জন্ম তারিখ" placeholder="জন্ম তারিখ">
 <select name="কাজের ধরন">
-<option>তথ্য সংশোধন</option>
-<option>নতুন আবেদন</option>
+<option>সার্ভার কপি</option>
+<option>সাইন কপি</option>
+<option>আইডি কার্ড</option>
 </select>
 <button type="button" class="submit" onclick="sendWhatsApp('nidForm')">Submit</button>
 </form>

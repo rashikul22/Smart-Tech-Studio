@@ -1,147 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smart Tech Studio</title>
-
-<style>
-body{margin:0;font-family:Arial;background:#f4f4f4}
-header{background:#e60000;color:white;padding:15px;text-align:center}
-.announcement{
-background:black;
-color:white;
-padding:8px;
-white-space:nowrap;
-overflow:hidden;
-}
-.announcement span{
-display:inline-block;
-padding-left:100%;
-animation:scroll 15s linear infinite;
-}
-@keyframes scroll{
-0%{transform:translateX(0)}
-100%{transform:translateX(-100%)}
-}
-.menu-btn{
-background:#333;
-color:white;
-padding:10px;
-text-align:center;
-cursor:pointer;
-}
-.menu{
-display:none;
-background:white;
-padding:10px;
-}
-.menu button{
-display:block;
-width:100%;
-margin:5px 0;
-padding:10px;
-}
-.section{
-display:none;
-padding:15px;
-}
-input,select{
-width:100%;
-padding:8px;
-margin:5px 0;
-}
-button.submit{
-background:green;
-color:white;
-padding:10px;
-border:none;
-width:100%;
-}
-.footer{
-background:#222;
-color:white;
-padding:15px;
-text-align:center;
-margin-top:20px;
-}
-</style>
-
-<script>
-function toggleMenu(){
-document.getElementById("menu").style.display="block";
-}
-
-function openSection(id){
-var sections=document.getElementsByClassName("section");
-for(var i=0;i<sections.length;i++){
-sections[i].style.display="none";
-}
-document.getElementById(id).style.display="block";
-}
-
-function sendWhatsApp(formId){
-var form=document.getElementById(formId);
-var data="";
-for(var i=0;i<form.elements.length;i++){
-if(form.elements[i].name){
-data+=form.elements[i].name+": "+form.elements[i].value+"%0A";
-}
-}
-window.open("https://wa.me/8801875895538?text="+data,"_blank");
-}
-</script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Tech Studio</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f8f8f8; }
+    header { background:#1a73e8; color:white; padding:20px; text-align:center; font-size:24px; font-weight:bold; position:relative; }
+    /* Announcement Bar */
+    #announcement { background:#ffeb3b; color:#000; white-space:nowrap; overflow:hidden; position:relative; padding:10px 0; font-weight:bold; }
+    #announcement span { display:inline-block; padding-left:100%; animation:scroll 15s linear infinite; }
+    @keyframes scroll { 0% { transform:translateX(0%);} 100% { transform:translateX(-100%);} }
+    /* Profile & Balance icons */
+    #icons { position:absolute; top:20px; right:20px; display:flex; gap:15px; }
+    .icon { width:30px; height:30px; background:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; }
+    /* Profile Modal */
+    #profileModal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:20px; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.3); width:300px; }
+    #profileModal input { width:100%; margin:5px 0; padding:8px; }
+    #profileModal button { margin-top:10px; padding:10px; width:100%; background:#1a73e8; color:white; border:none; cursor:pointer; }
+    #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); }
+  </style>
 </head>
 <body>
 
-<div class="announcement">
-<span>🔔 আমাদের সকল সেবা সকাল 10 টা থেকে রাত 9 টা পর্যন্ত চালু থাকে অনলাইন সংক্রান্ত সকল কাজের জন্যে যোগাযোগ করুন ডেভলোপারের সাথে, ধন্যবাদ। 🔔</span>
-</div>
+  <!-- Header -->
+  <header>
+    Smart Tech Studio
+    <div id="icons">
+      <div class="icon" id="profileIcon">👤</div>
+      <div class="icon" id="balanceIcon">💰 <span id="balanceAmount">0</span></div>
+    </div>
+  </header>
 
-<header>
-<h4>Smart Tech Studio</h4>
-<p>আমাদের সেবা পেতে মেনু বাটন থেকে অপশন সিলেক্ট করুন। ধন্যবাদ</p>
-<p>যে কোন সমস্যায় হোয়াটসঅ্যাপে ম্যাসেজ করুন: 01875895538 |
-  অথবা মেইল করুন: rashikulislam000@gmail.com</p>
-</header>
+  <!-- Announcement -->
+  <div id="announcement">
+    <span id="announcementText">স্বাগতম! এখানে আপনার নতুন সার্ভিসের তথ্য দেখতে পাবেন।</span>
+  </div>
 
-<div class="menu-btn" onclick="toggleMenu()">☰ মেনু</div>
+  <!-- Profile Modal -->
+  <div id="overlay"></div>
+  <div id="profileModal">
+    <h3>প্রোফাইল এডিট</h3>
+    <input type="text" id="profileName" placeholder="নাম">
+    <input type="text" id="profileMobile" placeholder="মোবাইল">
+    <input type="email" id="profileEmail" placeholder="ই-মেইল">
+    <button id="saveProfile">Save</button>
+    <button id="logoutProfile" style="background:red; margin-top:5px;">Logout</button>
+  </div>
 
-<div class="menu" id="menu">
-<button onclick="openSection('nid')">NID সার্ভিস</button>
-<button onclick="openSection('recharge')">রিচার্জ করুন</button>
-</div>
+<script>
+  // Announcement editable (admin)
+  const announcementText = document.getElementById('announcementText');
+  function updateAnnouncement(newText){
+    announcementText.textContent = newText;
+  }
+  // Example admin edit
+  // updateAnnouncement("নতুন এনাউন্সমেন্ট টেক্সট!"); // Call this to change
 
-<div id="nid" class="section">
-<h3>NID সার্ভিস</h3>
-<form id="nidForm">
-<input type="text" name="নাম" placeholder="নাম">
-<input type="text" name="NID নাম্বার" placeholder="NID নাম্বার">
-<input type="text" name="জন্ম তারিখ" placeholder="জন্ম তারিখ">
-<select name="কাজের ধরন">
-<option>সার্ভার কপি</option>
-<option>সাইন কপি</option>
-<option>আইডি কার্ড</option>
-</select>
-<button type="button" class="submit" onclick="sendWhatsApp('nidForm')">Submit</button>
-</form>
-</div>
+  // Profile Modal Logic
+  const profileIcon = document.getElementById('profileIcon');
+  const profileModal = document.getElementById('profileModal');
+  const overlay = document.getElementById('overlay');
+  profileIcon.addEventListener('click', () => { profileModal.style.display='block'; overlay.style.display='block'; });
 
-<div id="recharge" class="section">
-<h3>রিচার্জ করুন</h3>
-<form id="rechargeForm">
-<input type="text" name="যে নাম্বার থেকে টাকা পাঠিয়েছেন" placeholder="যে নাম্বার থেকে টাকা পাঠিয়েছেন">
-<input type="number" name="টাকার পরিমাণ" placeholder="টাকার পরিমাণ">
-<button type="button" class="submit" onclick="sendWhatsApp('rechargeForm')">Submit</button>
-</form>
-</div>
+  overlay.addEventListener('click', () => { profileModal.style.display='none'; overlay.style.display='none'; });
 
-<div class="footer">
-Developed by Md. Rashikul Islam<br>
-Proprietor Smart Tech Studio<br>
-Newashi, Nageswari, Kurigram<br>
-Mobile: 01875895538
-</div>
+  document.getElementById('saveProfile').addEventListener('click', ()=>{
+    alert('Profile Saved!');
+    profileModal.style.display='none'; overlay.style.display='none';
+  });
+
+  document.getElementById('logoutProfile').addEventListener('click', ()=>{
+    alert('Logged Out!');
+    profileModal.style.display='none'; overlay.style.display='none';
+  });
+
+  // Balance (example, later Firebase)
+  const balanceAmount = document.getElementById('balanceAmount');
+  function updateBalance(amount){
+    balanceAmount.textContent = amount;
+  }
+  // Example: updateBalance(500); // Call this to update balance dynamically
+
+</script>
 
 </body>
-</html>
+</html>l
